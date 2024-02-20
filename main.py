@@ -1,6 +1,5 @@
 import time
-from rotary_irq_rp2 import RotaryIRQ
-from machine import Pin, SoftI2C
+from machine import Pin, PWM
 import machine
 import ustruct
 import pimoroni_i2c
@@ -10,17 +9,8 @@ import sys
 import math
 import gc
 
-led = Pin("LED", Pin.OUT)
-r = RotaryIRQ(pin_num_clk=12, 
-              pin_num_dt=13, 
-              min_val=0, 
-              max_val=5, 
-              reverse=False, 
-              range_mode=RotaryIRQ.RANGE_WRAP)
-              
-val_old = r.value()
-
-
+buzzer=PWM(Pin(15))
+counter=0
 
 try:
     LIGHTSENSOR = {"sda": 0, "scl": 1}
@@ -36,8 +26,10 @@ def sensorread():
     rgbc_raw = bh1745.rgbc_raw()
     rgb_clamped = bh1745.rgbc_clamped()
     brightness=rgbc_raw[3]
+    buzzer.freq(brightness)
     print("Clamped: {}, {}, {}, {}".format(*rgb_clamped))
     print("Bright="+str(brightness))
+    print(counter)
     try:
         EV = math.log2(brightness/calibrationconst)+evcorrection
         print(EV)
@@ -45,13 +37,11 @@ def sensorread():
         EV = -10
     return rgb_clamped[0],rgb_clamped[1],rgb_clamped[2],EV
 
+buzzer.freq(500)
+buzzer.duty_u16(1000)
+
 while(1):
     red, green, blue, lastmeasure=sensorread()
     print(red,green,blue,lastmeasure)
-    led.value(0)
-    val_new = r.value()
-    
-    if val_old != val_new:
-        val_old = val_new
-        print('result =', val_new)
-    time.sleep_ms(50)
+    time.sleep_ms(1000)
+    counter+=1
