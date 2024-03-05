@@ -1,13 +1,10 @@
 # hey_jay
 I want to make the light sing
 
-## This is only possible with the great work of Mike Teachman
-The man, the legend put together great modules to read rotary encoders
-Standing on the shoulders of giants and shitting bricks the whole time man
--https://github.com/miketeachman/micropython-rotary
+## This is only possible with the great work of literally everyone else
 
-## Hella shout out to Pimironi and VEEB
-1. Take the pirate MicroPython and load it into your pico
-1. Load in Teachman's awesome libraries
+## Hella shout out to the Light
+1. Take the Adafruit firmware and load it into your pico
+1. Install the additional library onto the pico to use the sensor without the hell
 1. Load up my wet bag of shit
 1. Rejoice
