@@ -62,33 +62,65 @@ def getColorData():
     r, g, b, c = apds.color_data 
     return r, g, b, c
 
+#when I change chords, which direction do we move the synth?
+def getChordChangeDirection(cur, dest):
+    one_up=cur[0]<dest[0]
+    two_up=cur[1]<dest[1]
+    three_up=cur[2]<dest[2]
+    four_up=cur[3]<dest[3]
+    return one_up, two_up, three_up, four_up
+
 # where current is index of current chord and destination is well.. the destination
-def stepSynth(current, destination, chords):
+def changeChords(current, destination, chords):
     if current==destination:
         return
-    current_chord=chords[current]
-    next_chord=chords[destination]
-    
-thing=(1,2,3)
-first=thing[1]
-third=thing[2]
-third=6
-print(thing)
+    current_chord=list(chords[current])
+    destination_chord=list(chords[destination])
+    one_up, two_up, three_up, four_up=getChordChangeDirection(current_chord, destination_chord)
+    chord_two=chords[current]
+    while tuple(current_chord)!=tuple(destination_chord):
+        synth.release(current_chord)
+        if current_chord[0]!=destination_chord[0]:
+            if one_up:
+                current_chord[0]=int(((current_chord[0] * 10) + 10) / 10)
+            else: current_chord[0]=int(((current_chord[0] * 10) - 10) / 10)
+        if current_chord[1]!=destination_chord[1]:
+            if two_up:
+                current_chord[1]=int(((current_chord[1] * 10) + 10) / 10)
+            else: current_chord[1]=int(((current_chord[1] * 10) - 10) / 10)
+        if current_chord[2]!=destination_chord[2]:
+            if two_up:
+                current_chord[2]=int(((current_chord[2] * 10) + 10) / 10)
+            else: current_chord[2]=int(((current_chord[2] * 10) - 10) / 10)
+        if current_chord[3]!=destination_chord[3]:
+            if two_up:
+                current_chord[3]=int(((current_chord[3] * 10) + 10) / 10)
+            else: current_chord[3]=int(((current_chord[3] * 10) - 10) / 10)
+        synth.press(current_chord)
+        time.sleep(.005)
+    print("done")
+        
+changeChords(1, 2, chords)
+time.sleep(1)
+changeChords(2, 3, chords)
+time.sleep(1)
+changeChords(3, 0, chords)
+time.sleep(1)
 
 lfo = synthio.LFO(rate=0.6, scale=0.05)  # 1 Hz lfo at 0.25%
 
-synth.press(Dm7)
-time.sleep(1)
-synth.release(Dm7)
-synth.press(G7)
-time.sleep(1)
-synth.release(G7)
-synth.press(Cmaj7)
-time.sleep(1)
-synth.release(Cmaj7)
-synth.press(Am7)
-time.sleep(1)
-synth.release(Am7)
+# synth.press(Dm7)
+# time.sleep(1)
+# synth.release(Dm7)
+# synth.press(G7)
+# time.sleep(1)
+# synth.release(G7)
+# synth.press(Cmaj7)
+# time.sleep(1)
+# synth.release(Cmaj7)
+# synth.press(Am7)
+# time.sleep(1)
+# synth.release(Am7)
 
 state=0
 
