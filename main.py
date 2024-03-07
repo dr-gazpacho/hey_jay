@@ -63,7 +63,7 @@ def getColorData():
     return r, g, b, c
 
 #instead of moving tone to tone, maybe just fade one thing in and out over the other
-#chuck on an envelope
+#chuck on an envelope?
 
 
 lfo = synthio.LFO(rate=0.6, scale=0.05)  # 1 Hz lfo at 0.25%
