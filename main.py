@@ -53,14 +53,21 @@ synth = synthio.Synthesizer(sample_rate=44100)
 audio.play(mixer)
 mixer.voice[0].play(synth)
 mixer.voice[0].level = 0.5
-amp_env = synthio.Envelope(attack_time=0.05, sustain_level=0.2, release_time=0.5)
+amp_env = synthio.Envelope(attack_time=3, attack_level=mixer.voice[0].level, release_time=1)
 synth.envelope = amp_env
 
-def getColorData():
+
+def get_color_data():
     while not apds.color_data_ready:
         time.sleep(0.005)
     r, g, b, c = apds.color_data 
     return r, g, b, c
+
+def get_chord():
+    color_data=get_color_data()
+    lowest_light_present=min(color_data)
+    return chords[color_data.index(lowest_light_present)]
+    
 
 #instead of moving tone to tone, maybe just fade one thing in and out over the other
 #chuck on an envelope?
@@ -68,25 +75,28 @@ def getColorData():
 
 lfo = synthio.LFO(rate=0.6, scale=0.05)  # 1 Hz lfo at 0.25%
 
-synth.press(Dm7)
-time.sleep(1)
-synth.release(Dm7)
-synth.press(G7)
-time.sleep(1)
-synth.release(G7)
-synth.press(Cmaj7)
-time.sleep(1)
-synth.release(Cmaj7)
-synth.press(Am7)
-time.sleep(1)
-synth.release(Am7)
+# synth.press(Dm7)
+# time.sleep(1)
+# synth.release(Dm7)
+# synth.press(G7)
+# time.sleep(1)
+# synth.release(G7)
+# synth.press(Cmaj7)
+# time.sleep(1)
+# synth.release(Cmaj7)
+# synth.press(Am7)
+# time.sleep(1)
+# synth.release(Am7)
 
 state=0
+previous_chord=0
+current_chord=0
 
 while True:
-#     I might use gesture - wait to see if this button feels good
-#     gesture = apds.gesture()
+#   I might use gesture - wait to see if this button feels good
+#   gesture = apds.gesture()
     button_value=btn.value
+    
     if state is 0:
         if button_value is False:
             state=1
@@ -94,10 +104,14 @@ while True:
         if button_value is True:
             state=2
     if state is 2:
-        r, g, b, c = getColorData()
-        print("color temp {}".format(colorutility.calculate_color_temperature(r, g, b)))
-        print("light lux {}".format(colorutility.calculate_lux(r, g, b)))
-        print("r: {}, g: {}, b: {}, c: {}".format(r, g, b, c))
+        current_chord=get_chord()
+        if current_chord!=previous_chord:
+            synth.release(previous_chord)
+            synth.press(current_chord)
+            previous_chord=current_chord
+#         print("color temp {}".format(colorutility.calculate_color_temperature(r, g, b)))
+#         print("light lux {}".format(colorutility.calculate_lux(r, g, b)))
+#         print("r: {}, g: {}, b: {}, c: {}".format(r, g, b, c))
         state=0
     time.sleep(.05)
     
