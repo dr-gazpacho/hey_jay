@@ -17,24 +17,24 @@ btn = DigitalInOut(board.GP14)
 btn.direction = Direction.INPUT
 btn.pull = Pull.UP
 
-Dm7=(60, 57)
-G7=(55, 59)
-Cmaj7=(48, 52)
-Am7=(45, 55)
+c_one=(synthio.Note(frequency=260, filter=None), synthio.Note(frequency=220, filter=None))
+c_two=(synthio.Note(frequency=195, filter=None), synthio.Note(frequency=247, filter=None))
+c_three=(synthio.Note(frequency=130, filter=None), synthio.Note(frequency=165, filter=None))
+c_four=(synthio.Note(frequency=110, filter=None), synthio.Note(frequency=195, filter=None))
 
-chords=(Dm7, G7, Cmaj7, Am7)
+chords=(c_one, c_two, c_three, c_four)
 mixer_level=.5
 
-audio = audiopwmio.PWMAudioOut(board.GP2)
-mixer = audiomixer.Mixer(channel_count=1, sample_rate=44100, buffer_size=2048)
-synth = synthio.Synthesizer(sample_rate=44100)
+audio=audiopwmio.PWMAudioOut(board.GP2)
+mixer=audiomixer.Mixer(channel_count=1, sample_rate=44100, buffer_size=2048)
+synth=synthio.Synthesizer(sample_rate=44100)
 audio.play(mixer)
 mixer.voice[0].play(synth)
 mixer.voice[0].level=mixer_level
 amp_env = synthio.Envelope(attack_time=3, attack_level=mixer_level, release_time=1)
 synth.envelope = amp_env
-frequency = 2000
-resonance = 1.5
+frequency=2000
+resonance=1.5
 lpf = synth.low_pass_filter(frequency, resonance)
 
 
@@ -56,18 +56,18 @@ def get_chord():
 
 lfo = synthio.LFO(rate=0.6, scale=0.05)  # 1 Hz lfo at 0.25%
 
-synth.press(Dm7)
-time.sleep(1)
-synth.release(Dm7)
-synth.press(G7)
-time.sleep(1)
-synth.release(G7)
-synth.press(Cmaj7)
-time.sleep(1)
-synth.release(Cmaj7)
-synth.press(Am7)
-time.sleep(1)
-synth.release(Am7)
+# synth.press(c_one)
+# time.sleep(1)
+# synth.release(c_one)
+# synth.press(c_two)
+# time.sleep(1)
+# synth.release(c_two)
+# synth.press(c_three)
+# time.sleep(1)
+# synth.release(c_three)
+# synth.press(c_four)
+# time.sleep(1)
+# synth.release(c_four)
 
 state=0
 previous_chord=0
