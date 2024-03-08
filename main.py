@@ -17,44 +17,25 @@ btn = DigitalInOut(board.GP14)
 btn.direction = Direction.INPUT
 btn.pull = Pull.UP
 
-# Dm7
-c_four=60
-a_three=57
-f_three=53
-d_three=50
-Dm7=(c_four, a_three, f_three, d_three)
-
-# G7
-g_three=55
-b_three=59
-d_four=62
-f_four=65
-G7=(g_three, b_three, d_four, f_four)
-
-#Cmaj7
-b_three=59
-g_three=55
-e_three=52
-c_three=48
-Cmaj7=(b_three, g_three, e_three, c_three)
-
-#Am7
-a_two=45
-c_three=48
-e_three=52
-g_three=55
-Am7=(45, 48, 52, 55)
+Dm7=(60, 57)
+G7=(55, 59)
+Cmaj7=(48, 52)
+Am7=(45, 55)
 
 chords=(Dm7, G7, Cmaj7, Am7)
+mixer_level=.5
 
 audio = audiopwmio.PWMAudioOut(board.GP2)
 mixer = audiomixer.Mixer(channel_count=1, sample_rate=44100, buffer_size=2048)
 synth = synthio.Synthesizer(sample_rate=44100)
 audio.play(mixer)
 mixer.voice[0].play(synth)
-mixer.voice[0].level = 0.5
-amp_env = synthio.Envelope(attack_time=3, attack_level=mixer.voice[0].level, release_time=1)
+mixer.voice[0].level=mixer_level
+amp_env = synthio.Envelope(attack_time=3, attack_level=mixer_level, release_time=1)
 synth.envelope = amp_env
+frequency = 2000
+resonance = 1.5
+lpf = synth.low_pass_filter(frequency, resonance)
 
 
 def get_color_data():
@@ -75,22 +56,26 @@ def get_chord():
 
 lfo = synthio.LFO(rate=0.6, scale=0.05)  # 1 Hz lfo at 0.25%
 
-# synth.press(Dm7)
-# time.sleep(1)
-# synth.release(Dm7)
-# synth.press(G7)
-# time.sleep(1)
-# synth.release(G7)
-# synth.press(Cmaj7)
-# time.sleep(1)
-# synth.release(Cmaj7)
-# synth.press(Am7)
-# time.sleep(1)
-# synth.release(Am7)
+synth.press(Dm7)
+time.sleep(1)
+synth.release(Dm7)
+synth.press(G7)
+time.sleep(1)
+synth.release(G7)
+synth.press(Cmaj7)
+time.sleep(1)
+synth.release(Cmaj7)
+synth.press(Am7)
+time.sleep(1)
+synth.release(Am7)
 
 state=0
 previous_chord=0
 current_chord=0
+
+frequency = 2000
+resonance = 1.5
+lpf = synth.low_pass_filter(frequency, resonance)
 
 while True:
 #   I might use gesture - wait to see if this button feels good
