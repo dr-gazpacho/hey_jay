@@ -96,8 +96,9 @@ def get_chord(color_data):
     return chords[color_data.index(lowest_light_present)]
 
 def get_twinkle(color_data):
-    largest_light_present=min(color_data)
-    return twinkles[color_data.index(largest_light_present)]   
+    largest_light_present=max(color_data)
+    index=largest_light_present%4
+    return twinkles[largest_light_present%4]   
 
 #instead of moving tone to tone, maybe just fade one thing in and out over the other
 #chuck on an envelope?
@@ -148,6 +149,7 @@ while True:
             previous_twinkle=current_twinkle
             synth.press(current_twinkle)
             # synth.release_all_then_press(current_chord)
+        # if nothing changes, play one thingy thats on a timer, but do it a lil different each time
 #         print("color temp {}".format(colorutility.calculate_color_temperature(r, g, b)))
 #         print("light lux {}".format(colorutility.calculate_lux(r, g, b)))
 #         print("r: {}, g: {}, b: {}, c: {}".format(r, g, b, c))
