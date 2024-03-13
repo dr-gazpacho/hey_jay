@@ -27,38 +27,40 @@ wave_saw = np.linspace(SAMPLE_VOLUME, -SAMPLE_VOLUME, num=SAMPLE_SIZE, dtype=np.
 wave_tri = np.concatenate((np.linspace(-SAMPLE_VOLUME, SAMPLE_VOLUME, num=half_period, dtype=np.int16), np.linspace(SAMPLE_VOLUME, -SAMPLE_VOLUME, num=half_period, dtype=np.int16)))
 wave_square = np.concatenate((np.full(half_period, SAMPLE_VOLUME, dtype=np.int16), np.full(half_period, -SAMPLE_VOLUME, dtype=np.int16)))
 
+lfo_tremolo_one = synthio.LFO(rate=2 / 20, scale=.5, offset=0)
+lfo_tremolo_two = synthio.LFO(rate=.5 / 20, scale=.5, offset=0)
+lfo_tremolo_three = synthio.LFO(rate=4 / 20, scale=.5, offset=0)
+
 c_one=(synthio.Note(frequency=260, waveform=wave_tri), synthio.Note(frequency=220, waveform=wave_tri))
 c_two=(synthio.Note(frequency=195, waveform=wave_tri), synthio.Note(frequency=247, waveform=wave_tri))
 c_three=(synthio.Note(frequency=130, waveform=wave_tri), synthio.Note(frequency=165, waveform=wave_tri))
 c_four=(synthio.Note(frequency=110, waveform=wave_tri), synthio.Note(frequency=195, waveform=wave_tri))
 
-lfo_tremolo = synthio.LFO(rate=2 /10, scale=1, offset=0)
-lfo_tremolo_two = synthio.LFO(rate=.5 /10, scale=1, offset=0)
-lfo_tremolo_three = synthio.LFO(rate=4 / 10, scale=1, offset=0)
-
-a_one=(
-        synthio.Note(frequency=586, waveform=wave_sine, amplitude=lfo_tremolo),
+t_one=(
+        synthio.Note(frequency=586, waveform=wave_sine, amplitude=lfo_tremolo_one),
         synthio.Note(frequency=784, waveform=wave_saw, amplitude=lfo_tremolo_two),
         synthio.Note(frequency=880, waveform=wave_square, amplitude=lfo_tremolo_three),
     )
-a_two=(
-        synthio.Note(frequency=784, waveform=wave_tri),
-        synthio.Note(frequency=880, waveform=wave_tri),
-        synthio.Note(frequency=988, waveform=wave_tri),
+t_two=(
+        synthio.Note(frequency=784, waveform=wave_tri, amplitude=lfo_tremolo_one),
+        synthio.Note(frequency=880, waveform=wave_tri, amplitude=lfo_tremolo_two),
+        synthio.Note(frequency=988, waveform=wave_tri, amplitude=lfo_tremolo_three),
     )
-a_three=(
-        synthio.Note(frequency=784, waveform=wave_tri),
-        synthio.Note(frequency=988, waveform=wave_tri),
-        synthio.Note(frequency=1319, waveform=wave_tri),
+t_three=(
+        synthio.Note(frequency=784, waveform=wave_tri, amplitude=lfo_tremolo_one),
+        synthio.Note(frequency=988, waveform=wave_tri, amplitude=lfo_tremolo_two),
+        synthio.Note(frequency=1319, waveform=wave_tri, amplitude=lfo_tremolo_three),
     )
-a_four=(
-        synthio.Note(frequency=880, waveform=wave_tri),
-        synthio.Note(frequency=1047, waveform=wave_tri),
-        synthio.Note(frequency=1319, waveform=wave_tri),
+t_four=(
+        synthio.Note(frequency=880, waveform=wave_tri, amplitude=lfo_tremolo_one),
+        synthio.Note(frequency=1047, waveform=wave_tri, amplitude=lfo_tremolo_two),
+        synthio.Note(frequency=1319, waveform=wave_tri, amplitude=lfo_tremolo_three),
     )
 
 
 chords=(c_one, c_two, c_three, c_four)
+twinkles=(t_one, t_two, t_three, t_four)
+
 mixer_level=.8
 
 audio=audiopwmio.PWMAudioOut(board.GP2)
@@ -72,8 +74,6 @@ synth.envelope = amp_env
 frequency=2000
 resonance=1.5
 lpf = synth.low_pass_filter(frequency, resonance)
-
-synth.press(a_one)
 
 # synth.release_all_then_press(c_one)
 # time.sleep(10)
@@ -91,11 +91,13 @@ def get_color_data():
     r, g, b, c = apds.color_data 
     return r, g, b, c
 
-def get_chord():
-    color_data=get_color_data()
+def get_chord(color_data):
     lowest_light_present=min(color_data)
     return chords[color_data.index(lowest_light_present)]
-    
+
+def get_twinkle(color_data):
+    largest_light_present=min(color_data)
+    return twinkles[color_data.index(largest_light_present)]   
 
 #instead of moving tone to tone, maybe just fade one thing in and out over the other
 #chuck on an envelope?
@@ -106,6 +108,8 @@ lfo = synthio.LFO(rate=0.6, scale=0.05)  # 1 Hz lfo at 0.25%
 state=0
 previous_chord=0
 current_chord=0
+previous_twinkle=0
+current_twinkle=0
 
 frequency = 2000
 resonance = 1.5
@@ -132,11 +136,17 @@ while True:
         if button_value is True:
             state=2
     if state is 2:
-        current_chord=get_chord()
+        color_data=get_color_data()
+        current_chord=get_chord(color_data)
+        current_twinkle=get_twinkle(color_data)
         if current_chord!=previous_chord:
             synth.release(previous_chord)
             previous_chord=current_chord
             synth.press(current_chord)
+        if current_twinkle!=previous_twinkle:
+            synth.release(previous_twinkle)
+            previous_twinkle=current_twinkle
+            synth.press(current_twinkle)
             # synth.release_all_then_press(current_chord)
 #         print("color temp {}".format(colorutility.calculate_color_temperature(r, g, b)))
 #         print("light lux {}".format(colorutility.calculate_lux(r, g, b)))
