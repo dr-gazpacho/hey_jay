@@ -95,14 +95,15 @@ def get_twinkle(color_data):
     largest_light_present=max(color_data)
     return twinkles[largest_light_present%4]
 
-def get_bassi(color_data):
+def get_bass(color_data):
     lowest_light_present=min(color_data)
     return bassi[color_data.index(lowest_light_present)]
 
-def get_wonk(color_data):
+def get_bend_and_pass_filter(color_data):
     r, g, b, c=color_data
     lux=colorutility.calculate_lux(r, g, b)
-    return synthio.LFO(rate=lux, scale=.5, offset=0)
+    print(c)
+    return synthio.LFO(rate=lux, scale=.5, offset=0), synth.low_pass_filter(c, 1.5)
 #instead of moving tone to tone, maybe just fade one thing in and out over the other
 #chuck on an envelope?
 
@@ -116,12 +117,8 @@ previous_twinkle=0
 current_twinkle=0
 current_bass=0
 previous_bass=0
-wonk=0
-
-frequency = 2000
-resonance = 1.5
-lpf = synth.low_pass_filter(frequency, resonance)
-# current_chord[1].filter=lpf assign filters to the Note object
+bend=0
+pass_filter=0
 
 while True:
 #   I might use gesture - wait to see if this button feels good
@@ -136,12 +133,13 @@ while True:
             state=2
     if state is 2:
         color_data=get_color_data()
-        wonk=get_wonk(color_data);
+        bend, pass_filter=get_bend_and_pass_filter(color_data);
         current_chord=get_chord(color_data)
         current_twinkle=get_twinkle(color_data)
-        current_bass=get_bassi(color_data)
+        current_bass=get_bass(color_data)
         if current_chord!=previous_chord:
             synth.release(previous_chord)
+            current_chord[1].filter=pass_filter
             previous_chord=current_chord
             synth.press(current_chord)
         if current_twinkle!=previous_twinkle:
@@ -149,17 +147,15 @@ while True:
             previous_twinkle=current_twinkle
             synth.press(current_twinkle)
         synth.release(previous_bass)
-        current_bass.bend=wonk
+        current_bass.bend=bend
         previous_bass=current_bass
         synth.press(current_bass)
         # if nothing changes, play one thingy thats on a timer, but do it a lil different each time
 #         print("color temp {}".format(colorutility.calculate_color_temperature(r, g, b)))
-#         print("light lux {}".format(colorutility.calculate_lux(r, g, b)))
 #         print("r: {}, g: {}, b: {}, c: {}".format(r, g, b, c))
         state=0
     time.sleep(.05)
     
 # TODO
-# We know colors are 16 bit values (between 0 and 65k) so map those onto the synth params
-# Learn the synth params, so map the values into something sensible
-# Write the functions to slowly increase or decrease - or make the one WAY better
+# add dynamic filter
+# do something with color
