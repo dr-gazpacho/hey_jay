@@ -66,6 +66,7 @@ b_four=synthio.Note(frequency=110, waveform=wave_tri)
 chords=(c_one, c_two, c_three, c_four)
 twinkles=(t_one, t_two, t_three, t_four)
 bassi=(b_one, b_two, b_three, b_four)
+freaks=[0, 1000, 20000, 30000, 40000, 50000]
 
 mixer_level=.8
 
@@ -102,8 +103,8 @@ def get_bass(color_data):
 def get_bend_and_pass_filter(color_data):
     r, g, b, c=color_data
     lux=colorutility.calculate_lux(r, g, b)
-    print(c)
-    return synthio.LFO(rate=lux, scale=.5, offset=0), synth.low_pass_filter(c, 1.5)
+    length=len(str(c))
+    return synthio.LFO(rate=lux, scale=.5, offset=0), synth.low_pass_filter(freaks[length])
 #instead of moving tone to tone, maybe just fade one thing in and out over the other
 #chuck on an envelope?
 
@@ -126,10 +127,10 @@ while True:
     button_value=btn.value
     
     if state is 0:
-        if button_value is False:
+        if button_value is False: # gesture > 0:
             state=1
     if state is 1:
-        if button_value is True:
+        if button_value is True: # gesture == 0:
             state=2
     if state is 2:
         color_data=get_color_data()
@@ -157,5 +158,4 @@ while True:
     time.sleep(.05)
     
 # TODO
-# add dynamic filter
-# do something with color
+# do something with color temp
