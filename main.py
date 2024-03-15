@@ -37,9 +37,9 @@ c_three=(synthio.Note(frequency=130, waveform=wave_tri), synthio.Note(frequency=
 c_four=(synthio.Note(frequency=110, waveform=wave_tri), synthio.Note(frequency=195, waveform=wave_tri))
 
 t_one=(
-        synthio.Note(frequency=586, waveform=wave_sine, amplitude=lfo_tremolo_one),
-        synthio.Note(frequency=784, waveform=wave_saw, amplitude=lfo_tremolo_two),
-        synthio.Note(frequency=880, waveform=wave_square, amplitude=lfo_tremolo_three),
+        synthio.Note(frequency=586, waveform=wave_tri, amplitude=lfo_tremolo_one),
+        synthio.Note(frequency=784, waveform=wave_tri, amplitude=lfo_tremolo_two),
+        synthio.Note(frequency=880, waveform=wave_tri, amplitude=lfo_tremolo_three),
     )
 t_two=(
         synthio.Note(frequency=784, waveform=wave_tri, amplitude=lfo_tremolo_one),
@@ -57,15 +57,21 @@ t_four=(
         synthio.Note(frequency=1319, waveform=wave_tri, amplitude=lfo_tremolo_three),
     )
 
+b_one=synthio.Note(frequency=260, waveform=wave_tri)
+b_two=synthio.Note(frequency=195, waveform=wave_tri)
+b_three=synthio.Note(frequency=130, waveform=wave_tri)
+b_four=synthio.Note(frequency=110, waveform=wave_tri)
+
 
 chords=(c_one, c_two, c_three, c_four)
 twinkles=(t_one, t_two, t_three, t_four)
+bassi=(b_one, b_two, b_three, b_four)
 
 mixer_level=.8
 
 audio=audiopwmio.PWMAudioOut(board.GP2)
-mixer=audiomixer.Mixer(channel_count=1, sample_rate=44100, buffer_size=2048)
-synth=synthio.Synthesizer(sample_rate=44100)
+mixer=audiomixer.Mixer(channel_count=1, sample_rate=88200, buffer_size=4092)
+synth=synthio.Synthesizer(sample_rate=88200)
 audio.play(mixer)
 mixer.voice[0].play(synth)
 mixer.voice[0].level=mixer_level
@@ -74,16 +80,6 @@ synth.envelope = amp_env
 frequency=2000
 resonance=1.5
 lpf = synth.low_pass_filter(frequency, resonance)
-
-# synth.release_all_then_press(c_one)
-# time.sleep(10)
-# synth.release_all_then_press(c_two)
-# time.sleep(10)
-# synth.release_all_then_press(c_three)
-# time.sleep(10)
-# synth.release_all_then_press(c_four)
-# time.sleep(10)
-
 
 def get_color_data():
     while not apds.color_data_ready:
@@ -97,9 +93,16 @@ def get_chord(color_data):
 
 def get_twinkle(color_data):
     largest_light_present=max(color_data)
-    index=largest_light_present%4
-    return twinkles[largest_light_present%4]   
+    return twinkles[largest_light_present%4]
 
+def get_bassi(color_data):
+    lowest_light_present=min(color_data)
+    return bassi[color_data.index(lowest_light_present)]
+
+def get_wonk(color_data):
+    r, g, b, c=color_data
+    lux=colorutility.calculate_lux(r, g, b)
+    return synthio.LFO(rate=lux, scale=.5, offset=0)
 #instead of moving tone to tone, maybe just fade one thing in and out over the other
 #chuck on an envelope?
 
@@ -111,6 +114,9 @@ previous_chord=0
 current_chord=0
 previous_twinkle=0
 current_twinkle=0
+current_bass=0
+previous_bass=0
+wonk=0
 
 frequency = 2000
 resonance = 1.5
@@ -121,14 +127,6 @@ while True:
 #   I might use gesture - wait to see if this button feels good
 #   gesture = apds.gesture()
     button_value=btn.value
-#     synth.release_all_then_press(c_one)
-#     time.sleep(10)
-#     synth.release_all_then_press(c_two)
-#     time.sleep(10)
-#     synth.release_all_then_press(c_three)
-#     time.sleep(10)
-#     synth.release_all_then_press(c_four)
-#     time.sleep(10)
     
     if state is 0:
         if button_value is False:
@@ -138,8 +136,10 @@ while True:
             state=2
     if state is 2:
         color_data=get_color_data()
+        wonk=get_wonk(color_data);
         current_chord=get_chord(color_data)
         current_twinkle=get_twinkle(color_data)
+        current_bass=get_bassi(color_data)
         if current_chord!=previous_chord:
             synth.release(previous_chord)
             previous_chord=current_chord
@@ -148,7 +148,10 @@ while True:
             synth.release(previous_twinkle)
             previous_twinkle=current_twinkle
             synth.press(current_twinkle)
-            # synth.release_all_then_press(current_chord)
+        synth.release(previous_bass)
+        current_bass.bend=wonk
+        previous_bass=current_bass
+        synth.press(current_bass)
         # if nothing changes, play one thingy thats on a timer, but do it a lil different each time
 #         print("color temp {}".format(colorutility.calculate_color_temperature(r, g, b)))
 #         print("light lux {}".format(colorutility.calculate_lux(r, g, b)))
