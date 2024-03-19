@@ -67,6 +67,7 @@ chords=(c_one, c_two, c_three, c_four)
 twinkles=(t_one, t_two, t_three, t_four)
 bassi=(b_one, b_two, b_three, b_four)
 freaks=[0, 1000, 20000, 30000, 40000, 50000]
+waves=[wave_sine, wave_saw, wave_tri, wave_square]
 
 mixer_level=.8
 
@@ -78,9 +79,6 @@ mixer.voice[0].play(synth)
 mixer.voice[0].level=mixer_level
 amp_env = synthio.Envelope(attack_time=3, attack_level=mixer_level, release_time=3)
 synth.envelope = amp_env
-frequency=2000
-resonance=1.5
-lpf = synth.low_pass_filter(frequency, resonance)
 
 def get_color_data():
     while not apds.color_data_ready:
@@ -105,11 +103,18 @@ def get_bend_and_pass_filter(color_data):
     lux=colorutility.calculate_lux(r, g, b)
     length=len(str(c))
     return synthio.LFO(rate=lux, scale=.5, offset=0), synth.low_pass_filter(freaks[length])
-#instead of moving tone to tone, maybe just fade one thing in and out over the other
-#chuck on an envelope?
 
-
-lfo = synthio.LFO(rate=0.6, scale=0.05)  # 1 Hz lfo at 0.25%
+def get_the_temp_and_twist_it(color_data):
+    r, g, b, c=color_data
+    temp=colorutility.calculate_color_temperature(r, g, b)
+    the_last_leg=0
+    if(temp > 5000):
+        the_last_leg=3
+    elif(temp > 3500):
+        the_last_leg=2
+    elif(temp > 2000):
+        the_last_leg=1
+    return synthio.Note(frequency=24, waveform=waves[the_last_leg], amplitude=lfo_tremolo_two)
 
 state=0
 previous_chord=0
@@ -120,6 +125,8 @@ current_bass=0
 previous_bass=0
 bend=0
 pass_filter=0
+temp=0
+previous_temp=0
 
 while True:
 #   I might use gesture - wait to see if this button feels good
@@ -138,6 +145,7 @@ while True:
         current_chord=get_chord(color_data)
         current_twinkle=get_twinkle(color_data)
         current_bass=get_bass(color_data)
+        current_temp=get_the_temp_and_twist_it(color_data)
         if current_chord!=previous_chord:
             synth.release(previous_chord)
             current_chord[1].filter=pass_filter
@@ -147,13 +155,16 @@ while True:
             synth.release(previous_twinkle)
             previous_twinkle=current_twinkle
             synth.press(current_twinkle)
+        if temp!=previous_temp:
+            synth.release(previous_temp)
+            previous_temp=current_temp
+            synth.press(current_temp)
+
         synth.release(previous_bass)
         current_bass.bend=bend
         previous_bass=current_bass
         synth.press(current_bass)
-        # if nothing changes, play one thingy thats on a timer, but do it a lil different each time
-#         print("color temp {}".format(colorutility.calculate_color_temperature(r, g, b)))
-#         print("r: {}, g: {}, b: {}, c: {}".format(r, g, b, c))
+        
         state=0
     time.sleep(.05)
     
