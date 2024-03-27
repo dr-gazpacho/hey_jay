@@ -10,13 +10,9 @@ import ulab.numpy as np
 #get the first initialization out of the way
 i2c = board.STEMMA_I2C()
 apds = APDS9960(i2c)
-# apds.enable_proximity = True
-# apds.enable_gesture = True
+apds.enable_proximity = True
+apds.enable_gesture = True
 apds.enable_color = True
-# set up the button
-btn = DigitalInOut(board.GP14)
-btn.direction = Direction.INPUT
-btn.pull = Pull.UP
 
 SAMPLE_SIZE = 1024
 SAMPLE_VOLUME = 32000  # 0-32767
@@ -130,14 +126,13 @@ previous_temp=0
 
 while True:
 #   I might use gesture - wait to see if this button feels good
-#   gesture = apds.gesture()
-    button_value=btn.value
-    
+    gesture = apds.gesture()
+    print(gesture)
     if state is 0:
-        if button_value is False: # gesture > 0:
+        if gesture > 0:
             state=1
     if state is 1:
-        if button_value is True: # gesture == 0:
+        if gesture == 0:
             state=2
     if state is 2:
         color_data=get_color_data()
