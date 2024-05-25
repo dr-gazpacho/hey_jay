@@ -13,4 +13,4 @@ I'll be real with you, I'm gonna be super vauge here and just give you the broad
 1. Discover that the pico doesn't have enough memory to install all the packages. This is probably fine...
 1. Run it.
 1. Rejoice
-1. Batery of light is just a little program i wrote to trigger different color LEDs to test this thing out, its all whatever man
+1. Battery of light is just a little program i wrote to trigger different color LEDs to test this thing out, it's all whatever man
