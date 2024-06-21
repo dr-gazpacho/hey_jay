@@ -43,26 +43,26 @@ This is a headphone jack, or a Tip Ring Ring Sleeve Jack. The Pico will send aud
     * In Column B, plug one leg of your resistor into Row 21 and the other into Row 23
     * In Colum C, plug one leg of your capacitor into Row 22 and the other into Row 32
 3. Connect the the Pico to the TRRS Jack with Jumper Wires
+    * Ground the TRRS Jack and RC Circuit - one wire to RC circuit and one to the TRRS Jack
 ![Ground the TRRS Jack and RC Circuit](/images/h_3.jpg)
 *You can use any of the Row Gs*
-    * Ground the TRRS Jack and RC Circuit - one wire to RC circuit and one to the TRRS Jack
         1. Connect Column A Row G to Column A Row 22
         2. Connect Column A Row G to Column C Row 30 (Sleeve pin on TRRS Jack); you can use the same row G you used for the previous step.
+    * Run signal through RC circuit to the TRRS Jack
 ![Run signal through RC circuit to the TRRS Jack](/images/h_4.jpg)
 *Taking one audio signal coming out the Pico's Pin 2 and sending it to both left and right channels*
-    * Run signal through RC circuit to the TRRS Jack
         1. Connect Column B Row 2 to Column A Row 21
         2. Connect Column A Row 23 to Column C Row 29 (RIGHT pin)
         3. Connect Column D Row 29 to ColumnC Row 26 (LEFT pin)
 4. Connect the Pico to the APDS-9960
+    * Power and ground the APDS-9960
 ![Power and ground the APDS-9960](/images/h_5.jpg)
 *This component needs to be powered from the Pico directly*
-    * Power and ground the APDS-9960
         1. Connect Column I Row 3V to Column I Row 25 (VIN pin)
         2. Connect Column I Row G to Column I Row 27 (GND pin)
+    * Connect the SDA and SCL lines to APDS-9960
 ![Connect the SDA and SCL lines to APDS-9960](/images/h_6.jpg)
 *serial data and serial clock lines allow the pico to communicate with the sensor via I2C*
-    * Connect the SDA and SCL lines to APDS-9960
         1. Connect Column B Row 5 to Column I Row 28 (SCL pin)
         2. Connect Column B Row 4 to Column I Row 29 (SDA pin)
 5. Plug the Micro USB into the Pico and the other end into a power source (computer, portable battery, power brick, etc). A green light should flash on the APDS-9960 if everything is plugged in right
