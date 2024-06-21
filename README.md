@@ -32,14 +32,14 @@ We’re using some of the features off this [APDS Light and Motion sensor](https
 This is a headphone jack, or a Tip Ring Ring Sleeve Jack. The Pico will send audio via pulse-width modulation to the TRRS jack. We’re sending a single PWM signal and putting it in both the left and right channels. Sitting between the TRRS jack and the pico is a little RC filter circuit to smooth out the signal. [Todbot does great work and goes more in depth here](https://github.com/todbot/circuitpython-synthio-tricks)
 
 ## Assemble the Hey Jay
+1. Plug in the components
 ![Plug in the components](/images/h_1.jpg)
 *Pico, APDS-9960, and TRRS Jack all plugged into a breadboard*
-1. Plug in the components
     * Plug your TRRS Jack into Column A. The Ring pin should be in Row 25 and the Sleeve should be in Row 30
     * Plug the APDS-9960 into Column J. The VIN pin should be in Row 25 and the INT pin should be in row 30.
+2. Build the RC Circuit
 ![Build the RC Circuit](/images/h_2.jpg)
 *Techincally this should smooth out voltage fluctuations and give you cleaner audio*
-2. Build the RC Circuit
     * In Column B, plug one leg of your resistor into Row 21 and the other into Row 23
     * In Colum C, plug one leg of your capacitor into Row 22 and the other into Row 32
 3. Connect the the Pico to the TRRS Jack with Jumper Wires
