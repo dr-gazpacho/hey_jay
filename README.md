@@ -19,7 +19,7 @@ You will make the light sing. You’re going to assemble a Hey Jay, a little dev
 
 Raspberry Pi makes wonderful little computers for hobbyists. [The Pico is their microcontroller](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html), a small but powerful integrated circuit that has tons of open source support, projects, and help. It is the brains of our project, and where the software runs. It communicates with the two attached devices, the APDS-9960 and the TRRS Jack.
 
-![pico pinout](./images/Pico-R3-A4-Pinout.pdf "Raspberri Pi Pico Pinout Diagram")
+![pico pinout](./images/Pico-R3-A4-Pinout.pdf)
 
 All the actual programming and software is done, so you’ll only need to worry about the assembly. But, knowing how the guts work is half the fun. The software only uses a few of the pins on the Pico for this project: the 3V3 power output and ground pins to pull electricity through the circuit, the SDA and SCL pins to communicate with the APDS-9960, and a general purpose pin to output the audio.
 
