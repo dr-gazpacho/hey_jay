@@ -32,24 +32,30 @@ We’re using some of the features off this [APDS Light and Motion sensor](https
 This is a headphone jack, or a Tip Ring Ring Sleeve Jack. The Pico will send audio via pulse-width modulation to the TRRS jack. We’re sending a single PWM signal and putting it in both the left and right channels. Sitting between the TRRS jack and the pico is a little RC filter circuit to smooth out the signal. [Todbot does great work and goes more in depth here](https://github.com/todbot/circuitpython-synthio-tricks)
 
 ## Assemble the Hey Jay
+![Plug in the components](/images/h_1.jpg)
 1. Plug in the components
     * Plug your TRRS Jack into Column A. The Ring pin should be in Row 25 and the Sleeve should be in Row 30
     * Plug the APDS-9960 into Column J. The VIN pin should be in Row 25 and the INT pin should be in row 30.
+![Build the RC Circuit](/images/h_2.jpg)
 2. Build the RC Circuit
     * In Column B, plug one leg of your resistor into Row 21 and the other into Row 23
     * In Colum C, plug one leg of your capacitor into Row 22 and the other into Row 32
 3. Connect the the Pico to the TRRS Jack with Jumper Wires
+![Ground the TRRS Jack and RC Circuit](/images/h_3.jpg)
     * Ground the TRRS Jack and RC Circuit - one wire to RC circuit and one to the TRRS Jack
         1. Connect Column A Row G to Column A Row 22
         2. Connect Column A Row G to Column C Row 30 (Sleeve pin on TRRS Jack); you can use the same row G you used for the previous step.
+![Run signal through RC circuit to the TRRS Jack](/images/h_4.jpg)
     * Run signal through RC circuit to the TRRS Jack
         1. Connect Column B Row 2 to Column A Row 21
         2. Connect Column A Row 23 to Column C Row 29 (RIGHT pin)
         3. Connect Column D Row 29 to ColumnC Row 26 (LEFT pin)
 4. Connect the Pico to the APDS-9960
+![Power and ground the APDS-9960](/images/h_5.jpg)
     * Power and ground the APDS-9960
         1. Connect Column I Row 3V to Column I Row 25 (VIN pin)
         2. Connect Column I Row G to Column I Row 27 (GND pin)
+![Connect the SDA and SCL lines to APDS-9960](/images/h_6.jpg)
     * Connect the SDA and SCL lines to APDS-9960
         1. Connect Column B Row 5 to Column I Row 28 (SCL pin)
         2. Connect Column B Row 4 to Column I Row 29 (SDA pin)
