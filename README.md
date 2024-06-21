@@ -33,29 +33,35 @@ This is a headphone jack, or a Tip Ring Ring Sleeve Jack. The Pico will send aud
 
 ## Assemble the Hey Jay
 ![Plug in the components](/images/h_1.jpg)
+*Pico, APDS-9960, and TRRS Jack all plugged into a breadboard*
 1. Plug in the components
     * Plug your TRRS Jack into Column A. The Ring pin should be in Row 25 and the Sleeve should be in Row 30
     * Plug the APDS-9960 into Column J. The VIN pin should be in Row 25 and the INT pin should be in row 30.
 ![Build the RC Circuit](/images/h_2.jpg)
+*Techincally this should smooth out voltage fluctuations and give you cleaner audio*
 2. Build the RC Circuit
     * In Column B, plug one leg of your resistor into Row 21 and the other into Row 23
     * In Colum C, plug one leg of your capacitor into Row 22 and the other into Row 32
 3. Connect the the Pico to the TRRS Jack with Jumper Wires
 ![Ground the TRRS Jack and RC Circuit](/images/h_3.jpg)
+*You can use any of the Row Gs*
     * Ground the TRRS Jack and RC Circuit - one wire to RC circuit and one to the TRRS Jack
         1. Connect Column A Row G to Column A Row 22
         2. Connect Column A Row G to Column C Row 30 (Sleeve pin on TRRS Jack); you can use the same row G you used for the previous step.
 ![Run signal through RC circuit to the TRRS Jack](/images/h_4.jpg)
+*Taking one audio signal coming out the Pico's Pin 2 and sending it to both left and right channels*
     * Run signal through RC circuit to the TRRS Jack
         1. Connect Column B Row 2 to Column A Row 21
         2. Connect Column A Row 23 to Column C Row 29 (RIGHT pin)
         3. Connect Column D Row 29 to ColumnC Row 26 (LEFT pin)
 4. Connect the Pico to the APDS-9960
 ![Power and ground the APDS-9960](/images/h_5.jpg)
+*This component needs to be powered from the Pico directly*
     * Power and ground the APDS-9960
         1. Connect Column I Row 3V to Column I Row 25 (VIN pin)
         2. Connect Column I Row G to Column I Row 27 (GND pin)
 ![Connect the SDA and SCL lines to APDS-9960](/images/h_6.jpg)
+*serial data and serial clock lines allow the pico to communicate with the sensor via I2C*
     * Connect the SDA and SCL lines to APDS-9960
         1. Connect Column B Row 5 to Column I Row 28 (SCL pin)
         2. Connect Column B Row 4 to Column I Row 29 (SDA pin)
@@ -63,7 +69,21 @@ This is a headphone jack, or a Tip Ring Ring Sleeve Jack. The Pico will send aud
 6. Plug in your headphones into the TRRS Jack and the other end into your ears
 7. Wave your hand slowly over the APDS-9960 to start playing music - it’s a fussy little sensor and you need to be relatively close (think Obi-Wan Kenobi telling the stormtroopers, “these aren’t the droids you’re looking for”)
 8. Experiment with different colors of light and different brightnesses.
-9. Remember the most important part: you can make the light sing
+9. Remember the most important part: you can make the light sing.
+
+## Troubleshooting
+I tested all the components and the Pico’s, so you shouldn’t have a hardware issue. If you’ve wired up the Hey Jay correctly, it should work when you plug everything in. Some common solutions to frequent problems that I’ve definitely had are:
+- Make sure all your components are plugged in snuggly
+- Make sure the right pins on the Pico are connected to the right SCA/SCL pins
+- Make sure the legs of the resistor/capacitor don’t touch
+- Wave your hand closely and slowly over the motion sensor. It’s a little tricky sometimes with the wires being in the way; try waving a single finger over the sensor like your using your finger to follow the words of a particularly engrossing book.
+
+If anything else seems strange, drop me a line and I’ll help you debug
+
+## Advanced
+Now you have yourself a working gizmo! You might be content to leave it there, you might have caught the bug and want to try to do more. Programming microcontrollers can be as simple or as complex as you’d like it to be. You have the source code for this project, and a controller that’s already set up to run it. You can edit the source code and flash it onto the Pico’s memory, make your own variation on the Hey Jay. You can take this all apart, blank the flash memory, and build something new from scratch. You can throw it all away and start reading Lord of the Rings.
+
+This project was built with Adafruit’s Circuit Python on a Raspberry Pi Pico. If you want to learn more, start pulling on either of those threads and enjoy.
 
 
 
