@@ -1,5 +1,31 @@
-# hey_jay
-I wanted to make the light sing.
+# Hey Jay
+
+## Intro
+You will make the light sing. You’re going to assemble a Hey Jay, a little device that I like to think of as a reverse light organ. Once it’s assembled and powered up, you can wave your hand close to the device and trigger the motion sensor. Then, the microcontroller takes a sample of the ambient light from the sensor, maps the measurements onto a digital synthesizer, and finally it outputs the music to an ⅛” headphone jack. Think of it like a sort of digital wind chime that plays when you strum the light.
+
+## What This Kit Includes
+- 1x Raspberry Pi Pico H
+- 1x Breadboard
+- 2x 1k resistors (one for the build, one spare)
+- 2x 0.1 100nF ceramic capacitors (one for the build, one spare)
+- 1x APDS-9960 Light and Motion Sensor
+- 1x TRRS Jack
+- 1x Micro USB/USB C Cable
+- 1x Pair of Earbuds
+- Jumper wire
+
+## More on the Individual Components
+### Raspberry Pi Pico pre-mounted on a breadboard
+
+Raspberry Pi makes wonderful little computers for hobbyists. [The Pico is their microcontroller](https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html), a small but powerful integrated circuit that has tons of open source support, projects, and help. It is the brains of our project, and where the software runs. It communicates with the two attached devices, the APDS-9960 and the TRRS Jack.
+
+![pico pinout](./images/Pico-R3-A4-Pinout.pdf "Raspberri Pi Pico Pinout Diagram")
+
+All the actual programming and software is done, so you’ll only need to worry about the assembly. But, knowing how the guts work is half the fun. The software only uses a few of the pins on the Pico for this project: the 3V3 power output and ground pins to pull electricity through the circuit, the SDA and SCL pins to communicate with the APDS-9960, and a general purpose pin to output the audio.
+
+[The Pico is already embedded in a breadboard](https://learn.sparkfun.com/tutorials/how-to-use-a-breadboard/all?gad_source=1&gclid=CjwKCAjwg8qzBhAoEiwAWagLrCOuPgeaCGzUKGcsefkz8sO2QxBlmTG8HAUSbq4eaGX5hsJnfJ0WjBoCZXoQAvD_BwE), a small development board that lets you easily assemble electronics without solder. The breadboard I’ve included is printed specially for the Pico, you’ll note that each row on the board is numbered/lettered to correspond to the pinout diagram. 
+
+
 
 ## This is only possible with the great work of literally everyone else
 You're gonna need this, I installed mine with Thonny, but one way or another you need to install this library after you installed Circuit Python
