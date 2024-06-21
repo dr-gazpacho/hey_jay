@@ -23,7 +23,43 @@ Raspberry Pi makes wonderful little computers for hobbyists. [The Pico is their 
 
 All the actual programming and software is done, so you’ll only need to worry about the assembly. But, knowing how the guts work is half the fun. The software only uses a few of the pins on the Pico for this project: the 3V3 power output and ground pins to pull electricity through the circuit, the SDA and SCL pins to communicate with the APDS-9960, and a general purpose pin to output the audio.
 
-[The Pico is already embedded in a breadboard](https://learn.sparkfun.com/tutorials/how-to-use-a-breadboard/all?gad_source=1&gclid=CjwKCAjwg8qzBhAoEiwAWagLrCOuPgeaCGzUKGcsefkz8sO2QxBlmTG8HAUSbq4eaGX5hsJnfJ0WjBoCZXoQAvD_BwE), a small development board that lets you easily assemble electronics without solder. The breadboard I’ve included is printed specially for the Pico, you’ll note that each row on the board is numbered/lettered to correspond to the pinout diagram. 
+[The Pico is already embedded in a breadboard](https://learn.sparkfun.com/tutorials/how-to-use-a-breadboard/all?gad_source=1&gclid=CjwKCAjwg8qzBhAoEiwAWagLrCOuPgeaCGzUKGcsefkz8sO2QxBlmTG8HAUSbq4eaGX5hsJnfJ0WjBoCZXoQAvD_BwE), a small development board that lets you easily assemble electronics without solder. The breadboard I’ve included is printed specially for the Pico, you’ll note that each row on the board is numbered/lettered to correspond to the pinout diagram.
+
+### APDS-9960 Light and Motion Sensor
+We’re using some of the features off this [APDS Light and Motion sensor](https://cdn-learn.adafruit.com/downloads/pdf/adafruit-apds9960-breakout.pdf). The Pico communicates with the sensor via the [I2C protocol](https://learn.adafruit.com/working-with-i2c-devices?view=all&gad_source=1&gclid=CjwKCAjwg8qzBhAoEiwAWagLrHEtR_eSjPOc9SbVNn2TeAss1Bph67dzUFhMpJNbNNNunMI9VB0IpRoCisUQAvD_BwE). We’re using the SDA pin to send and receive data and the SCL pin to synchronize signals.
+
+### TRRS Jack
+This is a headphone jack, or a Tip Ring Ring Sleeve Jack. The Pico will send audio via pulse-width modulation to the TRRS jack. We’re sending a single PWM signal and putting it in both the left and right channels. Sitting between the TRRS jack and the pico is a little RC filter circuit to smooth out the signal. [Todbot does great work and goes more in depth here](https://github.com/todbot/circuitpython-synthio-tricks)
+
+## Assemble the Hey Jay
+1. Plug in the components
+    * Plug your TRRS Jack into Column A. The Ring pin should be in Row 25 and the Sleeve should be in Row 30
+    * Plug the APDS-9960 into Column J. The VIN pin should be in Row 25 and the INT pin should be in row 30.
+2. Build the RC Circuit
+    * In Column B, plug one leg of your resistor into Row 21 and the other into Row 23
+    * In Colum C, plug one leg of your capacitor into Row 22 and the other into Row 32
+3. Connect the the Pico to the TRRS Jack with Jumper Wires
+    * Ground the TRRS Jack and RC Circuit - one wire to RC circuit and one to the TRRS Jack
+        1. Connect Column A Row G to Column A Row 22
+        2. Connect Column A Row G to Column C Row 30 (Sleeve pin on TRRS Jack); you can use the same row G you used for the previous step.
+    * Run signal through RC circuit to the TRRS Jack
+        1. Connect Column B Row 2 to Column A Row 21
+        2. Connect Column A Row 23 to Column C Row 29 (RIGHT pin)
+        3. Connect Column D Row 29 to ColumnC Row 26 (LEFT pin)
+4. Connect the Pico to the APDS-9960
+    * Power and ground the APDS-9960
+        1. Connect Column I Row 3V to Column I Row 25 (VIN pin)
+        2. Connect Column I Row G to Column I Row 27 (GND pin)
+    * Connect the SDA and SCL lines to APDS-9960
+        1. Connect Column B Row 5 to Column I Row 28 (SCL pin)
+        2. Connect Column B Row 4 to Column I Row 29 (SDA pin)
+5. Plug the Micro USB into the Pico and the other end into a power source (computer, portable battery, power brick, etc). A green light should flash on the APDS-9960 if everything is plugged in right
+6. Plug in your headphones into the TRRS Jack and the other end into your ears
+7. Wave your hand slowly over the APDS-9960 to start playing music - it’s a fussy little sensor and you need to be relatively close (think Obi-Wan Kenobi telling the stormtroopers, “these aren’t the droids you’re looking for”)
+8. Experiment with different colors of light and different brightnesses.
+9. Remember the most important part: you can make the light sing
+
+
 
 
 
