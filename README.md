@@ -3,6 +3,8 @@
 ## Intro
 You will make the light sing. You’re going to assemble a Hey Jay, a little device that I like to think of as a reverse light organ. Once it’s assembled and powered up, you can wave your hand close to the device and trigger the motion sensor. Then, the microcontroller takes a sample of the ambient light from the sensor, maps the measurements onto a digital synthesizer, and finally it outputs the music to an ⅛” headphone jack. Think of it like a sort of digital wind chime that plays when you strum the light.
 
+I named this after one of my bros, bandmates, logical family, whatever you want. He died too young, and I miss him every day. I don't know where we go when we die or if we live forever, but I hope the light will just take us home.
+
 ## What This Kit Includes
 - 1x Raspberry Pi Pico H
 - 1x Breadboard
@@ -10,8 +12,9 @@ You will make the light sing. You’re going to assemble a Hey Jay, a little dev
 - 2x 0.1 100nF ceramic capacitors (one for the build, one spare)
 - 1x APDS-9960 Light and Motion Sensor
 - 1x TRRS Jack
-- 1x Micro USB/USB C Cable
+- 1x Micro USB/USB C cable
 - 1x Pair of Earbuds
+- 1x  1/8" to 1/8" cable as alternative to headphones
 - Jumper wire
 
 ## More on the Individual Components
