@@ -1,7 +1,7 @@
 # Hey Jay
 
 ## Intro
-[You will make the light sing](https://youtu.be/hkJqY9b0fkc). You’re going to assemble a Hey Jay, a little device that I like to think of as a reverse light organ. Once it’s assembled and powered up, you can wave your hand close to the device and trigger the motion sensor. Then, the microcontroller takes a sample of the ambient light from the sensor, maps the measurements onto a digital synthesizer, and finally it outputs the music to an ⅛” headphone jack. Think of it like a sort of digital wind chime that plays when you strum the light.
+[You will make the light sing](https://youtu.be/hkJqY9b0fkc). You’re going to assemble a Hey Jay, a little device that I like to think of as a reverse light organ. Once it’s assembled and powered up, you can wave your hand over the device and trigger the motion sensor. Then, the microcontroller takes a sample of the ambient light, maps the measurements onto a digital synthesizer, and finally it outputs the music to an ⅛” headphone jack. Think of it like a sort of digital wind chime that plays when you strum the light.
 
 ## What This Kit Includes
 - 1x Raspberry Pi Pico H
@@ -22,7 +22,7 @@ Raspberry Pi makes wonderful little computers for hobbyists. [The Pico is their 
 
 ![pico pinout](./images/PicoPinout.png "Pico Pinout")
 
-All the actual programming and software is done, so you’ll only need to worry about the assembly. But, knowing how the guts work is half the fun. The software only uses a few of the pins on the Pico for this project: the 3V3 power output and ground pins to pull electricity through the circuit, the SDA and SCL pins to communicate with the APDS-9960, and a general purpose pin to output the audio.
+All the actual programming and software is done, so you’ll only need to worry about the assembly. But, knowing how the guts work is half the fun. The software only uses a few of the pins on the Pico for this project: power and ground pins to pull electricity through the circuit, the SDA and SCL pins to communicate with the APDS-9960, and a general purpose pin to output the audio.
 
 [The Pico is already embedded in a breadboard](https://learn.sparkfun.com/tutorials/how-to-use-a-breadboard/all?gad_source=1&gclid=CjwKCAjwg8qzBhAoEiwAWagLrCOuPgeaCGzUKGcsefkz8sO2QxBlmTG8HAUSbq4eaGX5hsJnfJ0WjBoCZXoQAvD_BwE), a small development board that lets you easily assemble electronics without solder. The breadboard I’ve included is printed specially for the Pico, you’ll note that each row on the board is numbered/lettered to correspond to the pinout diagram.
 
@@ -30,7 +30,7 @@ All the actual programming and software is done, so you’ll only need to worry 
 We’re using some of the features off this [APDS Light and Motion sensor](https://cdn-learn.adafruit.com/downloads/pdf/adafruit-apds9960-breakout.pdf). The Pico communicates with the sensor via the [I2C protocol](https://learn.adafruit.com/working-with-i2c-devices?view=all&gad_source=1&gclid=CjwKCAjwg8qzBhAoEiwAWagLrHEtR_eSjPOc9SbVNn2TeAss1Bph67dzUFhMpJNbNNNunMI9VB0IpRoCisUQAvD_BwE). We’re using the SDA pin to send and receive data and the SCL pin to synchronize signals.
 
 ### TRRS Jack
-This is a headphone jack, or a Tip Ring Ring Sleeve Jack. The Pico will send audio via pulse-width modulation to the TRRS jack. We’re sending a single PWM signal and putting it in both the left and right channels. Sitting between the TRRS jack and the pico is a little RC filter circuit to smooth out the signal. [Todbot does great work and goes more in depth here](https://github.com/todbot/circuitpython-synthio-tricks)
+This is a headphone jack, or a Tip Ring Ring Sleeve Jack. The Pico will send audio via pulse-width modulation to the TRRS jack. We’re sending a single PWM signal and putting it in both the left and right channels. Sitting between the TRRS jack and the pico is a little RC filter circuit to smooth out the signal. [Todbot does great work and goes more in depth here](https://github.com/todbot/circuitpython-synthio-tricks). I do not claim to be an expert on electronics. I have no clue if this RC filter circuit really does anything in this project... but it feels cool so whatever.
 
 ## Assemble the Hey Jay
 1. Plug in the components
@@ -84,20 +84,13 @@ If anything else seems strange, drop me a line and I’ll help you debug
 ## Advanced
 Now you have yourself a working gizmo! You might be content to leave it there, you might have caught the bug and want to try to do more. Programming microcontrollers can be as simple or as complex as you’d like it to be. You have the source code for this project, and a controller that’s already set up to run it. You can edit the source code and flash it onto the Pico’s memory, make your own variation on the Hey Jay. You can take this all apart, blank the flash memory, and build something new from scratch. You can throw it all away and start reading Lord of the Rings.
 
-This project was built with Adafruit’s Circuit Python on a Raspberry Pi Pico. If you want to learn more, start pulling on either of those threads and enjoy.
-
-
-
-
+This project was built with Adafruit’s Circuit Python on a Raspberry Pi Pico. If you want to learn more, start reading better information from someone else.
 
 ## This is only possible with the great work of literally everyone else
-You're gonna need this, I installed mine with Thonny, but one way or another you need to install this library after you installed Circuit Python
-- https://github.com/adafruit/Adafruit_CircuitPython_APDS9960
-This little program relies on Synthio - it's a super rad part of Circuit Python
-- https://learn.adafruit.com/audio-synthesis-with-circuitpython-synthio/overview?gad_source=1&gclid=Cj0KCQjw4MSzBhC8ARIsAPFOuyVt3TkldHVSHByX8WePLlkY1TtWVS5IaBSWcsrIdmO11f7y1o3PGMkaAh2JEALw_wcB
+The project runs Circuit Python, Adafruit's flavor of Python, and relies on a [library for the APDS-9960](https://github.com/adafruit/Adafruit_CircuitPython_APDS9960). The library simplifies the I2C protocol for you so you don't need to implement it from scratch. However, the synthesizer library, [Synthio](https://learn.adafruit.com/audio-synthesis-with-circuitpython-synthio/overview?gad_source=1&gclid=Cj0KCQjw4MSzBhC8ARIsAPFOuyVt3TkldHVSHByX8WePLlkY1TtWVS5IaBSWcsrIdmO11f7y1o3PGMkaAh2JEALw_wcB), should be available to you with the most recent version of Circuit Python
 
 ## Starting up from scrach with a brand new Pico?
-I'll be real with you, I'm gonna be super vauge here and just give you the broad strokes of what you need to do. How you do it is entirely up to you.
+I'll be real with you, I'm gonna be super vauge here and just give you the broad strokes of what you need to do. How you do it is entirely up to you. Or you don't have to do anything at all. This is your life you must live.
 1. Load the circuit python firmware onto your pico (you can get this from Adafruit directly or use the version I have in the repo)
 1. Flash code.py onto the pico
 1. Install the circuit python apds9960 onto the pico to use the sensor without the hell
